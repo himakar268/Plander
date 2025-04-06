@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Plander</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* Admin-specific styles */
+    :root {
+      --primary-color: #4CAF50;
+      --danger-color: #f44336;
+      --warning-color: #ff9800;
+      --info-color: #2196F3;
+      --text-color: #333;
+      --bg-color: #f5f5f5;
+      --card-bg: #ffffff;
+      --border-color: #ddd;
+      --sidebar-width: 250px;
+      --sidebar-collapsed-width: 60px;
+      --navbar-height: 60px;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+      background-color: var(--card-bg);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      height: var(--navbar-height);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-toggle {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .admin-container {
+      display: flex;
+      min-height: calc(100vh - var(--navbar-height));
+      padding-top: var(--navbar-height);
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--card-bg);
+      box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+      height: calc(100vh - var(--navbar-height));
+      position: fixed;
+      left: 0;
+      transition: all 0.3s ease;
+      overflow-y: auto;
+      z-index: 900;
+    }
+
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    .sidebar.collapsed .sidebar-menu span {
+      display: none;
+    }
+
+    .sidebar.collapsed .sidebar-menu i {
+      margin-right: 0;
+      font-size: 1.2rem;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 1rem 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      color: var(--text-color);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .sidebar-menu i {
+      margin-right: 0.5rem;
+      width: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.collapsed + .main-content {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    .admin-card {
+      background-color: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .admin-card h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary-color);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-color);
+      box-sizing: border-box;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .btn-warning {
+      background-color: var(--warning-color);
+      color: white;
+    }
+
+    .btn-info {
+      background-color: var(--info-color);
+      color: white;
+    }
+
+    .btn-block {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      min-width: 600px;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: var(--bg-color);
+      font-weight: 600;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 1rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--primary-color);
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-color);
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: var(--card-bg);
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-section {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .footer-section h3,
+    .footer-section h4 {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+    }
+
+    .footer-section p {
+      font-size: 1rem;
+      color: var(--text-color);
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section ul li a {
+      text-decoration: none;
+      color: var(--text-color);
+      transition: color 0.3s ease;
+    }
+
+    .footer-section ul li a:hover {
+      color: var(--primary-color);
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-icons a {
+      color: var(--text-color);
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: var(--primary-color);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer-bottom p {
+      font-size: 0.9rem;
+      color: var(--text-color);
+    }
+
+    #toggleDarkMode {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.7rem 1rem;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #toggleDarkMode:hover {
+      background-color: #388E3C;
+      transform: scale(1.1);
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      --text-color: #ffffff;
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --border-color: #444;
+    }
+
+    body.dark-mode .navbar,
+    body.dark-mode .sidebar,
+    body.dark-mode .admin-card,
+    body.dark-mode footer,
+    body.dark-mode .stat-card {
+      background-color: var(--card-bg);
+    }
+
+    body.dark-mode .admin-card,
+    body.dark-mode footer,
+    body.dark-mode .stat-card {
+      box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group textarea,
+    body.dark-mode .form-group select {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      border-color: var(--border-color);
+    }
+
+    body.dark-mode th {
+      background-color: var(--bg-color);
+    }
+
+    body.dark-mode .footer-section p,
+    body.dark-mode .footer-section ul li a,
+    body.dark-mode .social-icons a,
+    body.dark-mode .footer-bottom p {
+      color: var(--text-color);
+    }
+
+    body.dark-mode .close-modal {
+      color: var(--text-color);
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <span>Plander Admin</span>
+    </div>
+    <div class="nav-links">
+      <button id="toggleDarkMode" class="btn">🌙</button>
+      <button class="btn btn-primary" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    <aside class="sidebar" id="sidebar">
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active" id="dashboardLink"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+        <li><a href="#" id="gamesLink"><i class="fas fa-gamepad"></i> <span>Games</span></a></li>
+        <li><a href="#" id="venuesLink"><i class="fas fa-map-marker-alt"></i> <span>Venues</span></a></li>
+        <li><a href="#"><i class="fas fa-calendar-alt"></i> <span>Bookings</span></a></li>
+        <li><a href="#"><i class="fas fa-users"></i> <span>Users</span></a></li>
+        <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <!-- Dashboard Section -->
+      <section id="dashboardSection">
+        <div class="admin-card">
+          <h2>Admin Dashboard</h2>
+          <p>Welcome to the Plander admin panel. Use the sidebar to manage games, venues, and other settings.</p>
+        </div>
+        
+        <div class="stats-container">
+          <div class="stat-card">
+            <h3>Total Games</h3>
+            <p id="totalGames">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Total Venues</h3>
+            <p id="totalVenues">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Active Bookings</h3>
+            <p id="activeBookings">0</p>
+          </div>
+          <div class="stat-card">
+            <h3>Registered Users</h3>
+            <p id="totalUsers">0</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Games Management Section -->
+      <section id="gamesSection" style="display: none;">
+        <div class="admin-card">
+          <h2>Games Management</h2>
+          <button class="btn btn-primary" id="addGameBtn">Add New Game</button>
+        </div>
+
+        <div class="admin-card">
+          <h2>Games List</h2>
+          <div class="table-container">
+            <table id="gamesTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Image</th>
+                  <th>Max Capacity</th>
+                  <th>Available</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Games will be populated here by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Venues Management Section -->
+      <section id="venuesSection" style="display: none;">
+        <div class="admin-card">
+          <h2>Venues Management</h2>
+          <button class="btn btn-primary" id="addVenueBtn">Add New Venue</button>
+        </div>
+
+        <div class="admin-card">
+          <h2>Venues List</h2>
+          <div class="table-container">
+            <table id="venuesTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Image</th>
+                  <th>Max Capacity</th>
+                  <th>Available</th>
+                  <th>Rate/Hour</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Venues will be populated here by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Game Modal -->
+  <div class="modal" id="gameModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="gameModalTitle">Add New Game</h2>
+        <button class="close-modal" id="closeGameModal">&times;</button>
+      </div>
+      <form id="gameForm">
+        <input type="hidden" id="gameId">
+        <div class="form-group">
+          <label for="gameName">Game Name</label>
+          <input type="text" id="gameName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="gameImage">Image URL</label>
+          <input type="text" id="gameImage" name="image" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="gameMaxCapacity">Max Capacity</label>
+            <input type="number" id="gameMaxCapacity" name="maxCapacity" required>
+          </div>
+          <div class="form-group">
+            <label for="gameAvailableCapacity">Available Capacity</label>
+            <input type="number" id="gameAvailableCapacity" name="availableCapacity" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Save Game</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Venue Modal -->
+  <div class="modal" id="venueModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="venueModalTitle">Add New Venue</h2>
+        <button class="close-modal" id="closeVenueModal">&times;</button>
+      </div>
+      <form id="venueForm">
+        <input type="hidden" id="venueId">
+        <div class="form-group">
+          <label for="venueName">Venue Name</label>
+          <input type="text" id="venueName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="venueImage">Image URL</label>
+          <input type="text" id="venueImage" name="image" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="venueMaxCapacity">Max Capacity</label>
+            <input type="number" id="venueMaxCapacity" name="maxCapacity" required>
+          </div>
+          <div class="form-group">
+            <label for="venueAvailableCapacity">Available Capacity</label>
+            <input type="number" id="venueAvailableCapacity" name="availableCapacity" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="venueRatePerHour">Rate Per Hour ($)</label>
+          <input type="number" step="0.01" id="venueRatePerHour" name="ratePerHour" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Save Venue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="confirmModalTitle">Confirm Action</h2>
+        <button class="close-modal" id="closeConfirmModal">&times;</button>
+      </div>
+      <p id="confirmModalMessage">Are you sure you want to perform this action?</p>
+      <div class="form-row" style="justify-content: flex-end; margin-top: 1.5rem;">
+        <button class="btn" id="cancelConfirmBtn">Cancel</button>
+        <button class="btn btn-danger" id="confirmActionBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Plander Admin</h3>
+        <p>Administration panel for managing sports facilities.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Support</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fas fa-envelope"></i></a>
+          <a href="#"><i class="fas fa-phone"></i></a>
+          <a href="#"><i class="fas fa-question-circle"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Plander Admin. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // DOM Elements
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const toggleDarkMode = document.getElementById('toggleDarkMode');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Section elements
+    const dashboardSection = document.getElementById('dashboardSection');
+    const gamesSection = document.getElementById('gamesSection');
+    const venuesSection = document.getElementById('venuesSection');
+
+    // Navigation links
+    const dashboardLink = document.getElementById('dashboardLink');
+    const gamesLink = document.getElementById('gamesLink');
+    const venuesLink = document.getElementById('venuesLink');
+
+    // Game elements
+    const addGameBtn = document.getElementById('addGameBtn');
+    const gameModal = document.getElementById('gameModal');
+    const gameModalTitle = document.getElementById('gameModalTitle');
+    const closeGameModal = document.getElementById('closeGameModal');
+    const gameForm = document.getElementById('gameForm');
+    const gameIdInput = document.getElementById('gameId');
+    const gamesTable = document.getElementById('gamesTable').getElementsByTagName('tbody')[0];
+
+    // Venue elements
+    const addVenueBtn = document.getElementById('addVenueBtn');
+    const venueModal = document.getElementById('venueModal');
+    const venueModalTitle = document.getElementById('venueModalTitle');
+    const closeVenueModal = document.getElementById('closeVenueModal');
+    const venueForm = document.getElementById('venueForm');
+    const venueIdInput = document.getElementById('venueId');
+    const venuesTable = document.getElementById('venuesTable').getElementsByTagName('tbody')[0];
+
+    // Confirmation modal
+    const confirmModal = document.getElementById('confirmModal');
+    const confirmModalTitle = document.getElementById('confirmModalTitle');
+    const confirmModalMessage = document.getElementById('confirmModalMessage');
+    const closeConfirmModal = document.getElementById('closeConfirmModal');
+    const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+    const confirmActionBtn = document.getElementById('confirmActionBtn');
+
+    // State variables
+    let currentAction = null;
+    let currentItemId = null;
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check screen size and toggle sidebar accordingly
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('show');
+      } else {
+        sidebar.classList.add('show');
+      }
+
+      // Initialize dashboard stats
+      initDashboard();
+
+      // Set up event listeners
+      setupEventListeners();
+    });
+
+    // Set up all event listeners
+    function setupEventListeners() {
+      // Menu toggle
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('show');
+      });
+
+      // Dark mode toggle
+      toggleDarkMode.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        // Save preference to localStorage
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+      });
+
+      // Check for saved dark mode preference
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        toggleDarkMode.textContent = '☀️';
+      }
+
+      // Navigation between sections
+      dashboardLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('dashboard');
+        updateActiveNav('dashboardLink');
+      });
+
+      gamesLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('games');
+        updateActiveNav('gamesLink');
+        fetchGames();
+      });
+
+      venuesLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('venues');
+        updateActiveNav('venuesLink');
+        fetchVenues();
+      });
+
+      // Logout functionality
+      logoutBtn.addEventListener('click', () => {
+        // Clear any admin session/token
+        localStorage.removeItem('adminToken');
+        // Redirect to login page
+        window.location.href = 'login.html';
+      });
+
+      // Game management
+      addGameBtn.addEventListener('click', () => {
+        openGameModal('add');
+      });
+
+      closeGameModal.addEventListener('click', () => {
+        closeModal(gameModal);
+      });
+
+      gameForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleGameSubmit();
+      });
+
+      // Venue management
+      addVenueBtn.addEventListener('click', () => {
+        openVenueModal('add');
+      });
+
+      closeVenueModal.addEventListener('click', () => {
+        closeModal(venueModal);
+      });
+
+      venueForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleVenueSubmit();
+      });
+
+      // Confirmation modal
+      closeConfirmModal.addEventListener('click', () => {
+        closeModal(confirmModal);
+      });
+
+      cancelConfirmBtn.addEventListener('click', () => {
+        closeModal(confirmModal);
+      });
+
+      confirmActionBtn.addEventListener('click', async () => {
+        if (currentAction === 'deleteGame') {
+          await deleteGame(currentItemId);
+        } else if (currentAction === 'deleteVenue') {
+          await deleteVenue(currentItemId);
+        }
+        closeModal(confirmModal);
+      });
+
+      // Close modals when clicking outside
+      window.addEventListener('click', (e) => {
+        if (e.target === gameModal) {
+          closeModal(gameModal);
+        }
+        if (e.target === venueModal) {
+          closeModal(venueModal);
+        }
+        if (e.target === confirmModal) {
+          closeModal(confirmModal);
+        }
+      });
+    }
+
+    // Show the specified section and hide others
+    function showSection(section) {
+      dashboardSection.style.display = 'none';
+      gamesSection.style.display = 'none';
+      venuesSection.style.display = 'none';
+
+      if (section === 'dashboard') {
+        dashboardSection.style.display = 'block';
+      } else if (section === 'games') {
+        gamesSection.style.display = 'block';
+      } else if (section === 'venues') {
+        venuesSection.style.display = 'block';
+      }
+    }
+
+    // Update active navigation link
+    function updateActiveNav(activeId) {
+      document.querySelectorAll('.sidebar-menu a').forEach(link => {
+        link.classList.remove('active');
+      });
+      document.getElementById(activeId).classList.add('active');
+    }
+
+    // Modal functions
+    function openModal(modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function openGameModal(action, game = null) {
+      if (action === 'add') {
+        gameModalTitle.textContent = 'Add New Game';
+        gameForm.reset();
+        gameIdInput.value = '';
+      } else if (action === 'edit' && game) {
+        gameModalTitle.textContent = 'Edit Game';
+        gameIdInput.value = game.id;
+        document.getElementById('gameName').value = game.name;
+        document.getElementById('gameImage').value = game.image;
+        document.getElementById('gameMaxCapacity').value = game.maxCapacity;
+        document.getElementById('gameAvailableCapacity').value = game.availableCapacity;
+      }
+      openModal(gameModal);
+    }
+
+    function openVenueModal(action, venue = null) {
+      if (action === 'add') {
+        venueModalTitle.textContent = 'Add New Venue';
+        venueForm.reset();
+        venueIdInput.value = '';
+      } else if (action === 'edit' && venue) {
+        venueModalTitle.textContent = 'Edit Venue';
+        venueIdInput.value = venue.id;
+        document.getElementById('venueName').value = venue.name;
+        document.getElementById('venueImage').value = venue.image;
+        document.getElementById('venueMaxCapacity').value = venue.maxCapacity;
+        document.getElementById('venueAvailableCapacity').value = venue.availableCapacity;
+        document.getElementById('venueRatePerHour').value = venue.ratePerHour;
+      }
+      openModal(venueModal);
+    }
+
+    function openConfirmModal(title, message, action, itemId) {
+      confirmModalTitle.textContent = title;
+      confirmModalMessage.textContent = message;
+      currentAction = action;
+      currentItemId = itemId;
+      openModal(confirmModal);
+    }
+
+    // Game management functions
+    async function handleGameSubmit() {
+      const gameData = {
+        name: document.getElementById('gameName').value,
+        image: document.getElementById('gameImage').value,
+        maxCapacity: parseInt(document.getElementById('gameMaxCapacity').value),
+        availableCapacity: parseInt(document.getElementById('gameAvailableCapacity').value)
+      };
+
+      const gameId = gameIdInput.value;
+      const method = gameId ? 'PUT' : 'POST';
+      const url = gameId ? `http://localhost:8085/api/games/${gameId}` : 'http://localhost:8085/api/games';
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(gameData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          showToast(gameId ? 'Game updated successfully!' : 'Game added successfully!', 'success');
+          closeModal(gameModal);
+          fetchGames();
+        } else {
+          const errorData = await response.json();
+          showToast(`Error: ${errorData.message || 'Failed to save game'}`, 'error');
+        }
+      } catch (error) {
+        console.error('Error saving game:', error);
+        showToast('Failed to save game. Please try again.', 'error');
+      }
+    }
+
+    async function fetchGames() {
+      try {
+        const response = await fetch('http://localhost:8085/api/games');
+        const games = await response.json();
+        
+        gamesTable.innerHTML = '';
+        
+        games.forEach(game => {
+          const row = gamesTable.insertRow();
+          row.innerHTML = `
+            <td>${game.id}</td>
+            <td>${game.name}</td>
+            <td><a href="${game.image}" target="_blank">View Image</a></td>
+            <td>${game.maxCapacity}</td>
+            <td>${game.availableCapacity}</td>
+            <td class="action-btns">
+              <button class="btn btn-warning btn-sm" onclick="openGameModal('edit', ${JSON.stringify(game).replace(/"/g, '&quot;')})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="openConfirmModal('Delete Game', 'Are you sure you want to delete this game?', 'deleteGame', ${game.id})">Delete</button>
+            </td>
+          `;
+        });
+        
+        document.getElementById('totalGames').textContent = games.length;
+      } catch (error) {
+        console.error('Error fetching games:', error);
+        showToast('Failed to load games. Please try again.', 'error');
+      }
+    }
+
+    async function deleteGame(id) {
+      try {
+        const response = await fetch(`http://localhost:8085/api/games/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          showToast('Game deleted successfully!', 'success');
+          fetchGames();
+        } else {
+          const errorData = await response.json();
+          showToast(`Error: ${errorData.message || 'Failed to delete game'}`, 'error');
+        }
+      } catch (error) {
+        console.error('Error deleting game:', error);
+        showToast('Failed to delete game. Please try again.', 'error');
+      }
+    }
+
+    // Venue management functions
+    async function handleVenueSubmit() {
+      const venueData = {
+        name: document.getElementById('venueName').value,
+        image: document.getElementById('venueImage').value,
+        maxCapacity: parseInt(document.getElementById('venueMaxCapacity').value),
+        availableCapacity: parseInt(document.getElementById('venueAvailableCapacity').value),
+        ratePerHour: parseFloat(document.getElementById('venueRatePerHour').value)
+      };
+
+      const venueId = venueIdInput.value;
+      const method = venueId ? 'PUT' : 'POST';
+      const url = venueId ? `http://localhost:8085/api/venues/${venueId}` : 'http://localhost:8085/api/venues';
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(venueData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          showToast(venueId ? 'Venue updated successfully!' : 'Venue added successfully!', 'success');
+          closeModal(venueModal);
+          fetchVenues();
+        } else {
+          const errorData = await response.json();
+          showToast(`Error: ${errorData.message || 'Failed to save venue'}`, 'error');
+        }
+      } catch (error) {
+        console.error('Error saving venue:', error);
+        showToast('Failed to save venue. Please try again.', 'error');
+      }
+    }
+
+    async function fetchVenues() {
+      try {
+        const response = await fetch('http://localhost:8085/api/venues');
+        const venues = await response.json();
+        
+        venuesTable.innerHTML = '';
+        
+        venues.forEach(venue => {
+          const row = venuesTable.insertRow();
+          row.innerHTML = `
+            <td>${venue.id}</td>
+            <td>${venue.name}</td>
+            <td><a href="${venue.image}" target="_blank">View Image</a></td>
+            <td>${venue.maxCapacity}</td>
+            <td>${venue.availableCapacity}</td>
+            <td>$${venue.ratePerHour.toFixed(2)}</td>
+            <td class="action-btns">
+              <button class="btn btn-warning btn-sm" onclick="openVenueModal('edit', ${JSON.stringify(venue).replace(/"/g, '&quot;')})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="openConfirmModal('Delete Venue', 'Are you sure you want to delete this venue?', 'deleteVenue', ${venue.id})">Delete</button>
+            </td>
+          `;
+        });
+        
+        document.getElementById('totalVenues').textContent = venues.length;
+      } catch (error) {
+        console.error('Error fetching venues:', error);
+        showToast('Failed to load venues. Please try again.', 'error');
+      }
+    }
+
+    async function deleteVenue(id) {
+      try {
+        const response = await fetch(`http://localhost:8085/api/venues/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          showToast('Venue deleted successfully!', 'success');
+          fetchVenues();
+        } else {
+          const errorData = await response.json();
+          showToast(`Error: ${errorData.message || 'Failed to delete venue'}`, 'error');
+        }
+      } catch (error) {
+        console.error('Error deleting venue:', error);
+        showToast('Failed to delete venue. Please try again.', 'error');
+      }
+    }
+
+    // Initialize dashboard stats
+    async function initDashboard() {
+      try {
+        const [gamesResponse, venuesResponse, usersResponse] = await Promise.all([
+          fetch('http://localhost:8085/api/games'),
+          fetch('http://localhost:8085/api/venues'),
+          fetch('http://localhost:8085/users')
+        ]);
+        
+        const games = await gamesResponse.json();
+        const venues = await venuesResponse.json();
+        const users = await usersResponse.json();
+        
+        document.getElementById('totalGames').textContent = games.length;
+        document.getElementById('totalVenues').textContent = venues.length;
+        document.getElementById('totalUsers').textContent = users.length;
+        // For demo purposes, set a random number for active bookings
+        document.getElementById('activeBookings').textContent = Math.floor(Math.random() * 50);
+      } catch (error) {
+        console.error('Error initializing dashboard:', error);
+      }
+    }
+
+    // Show toast notification
+    function showToast(message, type = 'info') {
+      // In a real application, you would implement a proper toast notification system
+      alert(`${type.toUpperCase()}: ${message}`);
+    }
+
+    // Make functions available globally for inline event handlers
+    window.openGameModal = openGameModal;
+    window.openVenueModal = openVenueModal;
+    window.openConfirmModal = openConfirmModal;
+    window.deleteGame = deleteGame;
+    window.deleteVenue = deleteVenue;
+  </script>
+</body>
+</html>

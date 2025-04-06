@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - Plander</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* Light Mode Styles */
+    body {
+      background-color: #ffffff;
+      color: #000000;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .success-message {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .success-message h1 {
+      font-size: 2.5rem;
+      color: #4CAF50;
+    }
+    .success-message p {
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+    .success-message .details {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      display: inline-block;
+      color: #000000;
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #121212;
+      color: #ffffff;
+    }
+
+    body.dark-mode .success-message .details {
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+
+    /* Green tick animation */
+    .tick-icon {
+      font-size: 4rem;
+      color: #4CAF50;
+      animation: jump 1s infinite;
+    }
+
+    @keyframes jump {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* Print Booking button */
+    .print-booking-btn, .back-to-home-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .print-booking-btn:hover, .back-to-home-btn:hover {
+      background-color: #45a049;
+    }
+
+    /* Center QR Code */
+    .qr-section {
+      margin-top: 20px;
+      text-align: center;
+    }
+    #qrCode {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    
+    /* Reduce QR Code Size */
+    #qrCode img {
+      width: 80px !important;
+      height: 80px !important;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Plander</div>
+    <div class="nav-links">
+      <button id="toggleDarkMode" class="btn">🌙</button>
+    </div>
+  </nav>
+
+  <main id="mainContent">
+    <div id="successPage" class="page active">
+      <section class="success-message animate__animated animate__bounceIn">
+        <div class="tick-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Payment Successful!</h1>
+        <p>Thank you for booking with Plander.</p>
+        
+        <div class="details animate__animated animate__fadeInUp">
+          <p><strong>Venue:</strong> <span id="successVenue"></span></p>
+          <p><strong>Date:</strong> <span id="successDate"></span></p>
+          <p><strong>Time:</strong> <span id="successTime"></span></p>
+          <p><strong>Slots Booked:</strong> <span id="successQuantity"></span></p>
+          <p><strong>Total Amount:</strong> <span id="successAmount"></span></p>
+        </div>
+
+        <!-- QR Code Section -->
+        <div class="qr-section">
+          <h3>Your QR Code</h3>
+          <div id="qrCode"></div>
+        </div>
+
+        <!-- Print Booking Button -->
+        <button onclick="printBooking()" class="print-booking-btn">Print Booking</button>
+        <!-- Back to Home Button -->
+        <button onclick="goToHome()" class="back-to-home-btn">Back to Home</button>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer style="
+    background-color: var(--card-background);
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+  ">
+    <div style="
+      display: flex;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 2rem;
+    ">
+      <div style="flex: 1;">
+        <h3 style="
+          font-size: 1.5rem;
+          color: var(--primary-color);
+          margin-bottom: 1rem;
+        ">Plander</h3>
+        <p style="
+          font-size: 1rem;
+          color: var(--text-color);
+        ">Your go-to platform for booking sports facilities.</p>
+      </div>
+      <div style="flex: 1;">
+        <h4 style="
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-bottom: 1rem;
+        ">Quick Links</h4>
+        <ul style="list-style: none;">
+          <li style="margin-bottom: 0.5rem;">
+            <a href="#" style="
+              text-decoration: none;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+            ">About Us</a>
+          </li>
+          <li style="margin-bottom: 0.5rem;">
+            <a href="#" style="
+              text-decoration: none;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+            ">Contact Us</a>
+          </li>
+          <li style="margin-bottom: 0.5rem;">
+            <a href="#" style="
+              text-decoration: none;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+            ">Privacy Policy</a>
+          </li>
+        </ul>
+      </div>
+      <div style="flex: 1;">
+        <h4 style="
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-bottom: 1rem;
+        ">Follow Us</h4>
+        <div style="display: flex; gap: 1rem;">
+          <a href="#" style="
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+          "><i class="fab fa-facebook"></i></a>
+          <a href="#" style="
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+          "><i class="fab fa-twitter"></i></a>
+          <a href="#" style="
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+          "><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div style="
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    ">
+      <p style="
+        font-size: 0.9rem;
+        color: var(--text-color);
+      ">&copy; 2025 Plander. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Load booking details from query parameters
+    document.addEventListener("DOMContentLoaded", () => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const bookingDetails = {
+        venue: queryParams.get('venue'),
+        date: queryParams.get('date'),
+        time: queryParams.get('time'),
+        seatsBooked: queryParams.get('seatsBooked'),
+        ratePerHour: queryParams.get('ratePerHour'),
+      };
+
+      if (bookingDetails.venue) {
+        document.getElementById("successVenue").textContent = bookingDetails.venue;
+        document.getElementById("successDate").textContent = bookingDetails.date;
+        document.getElementById("successTime").textContent = bookingDetails.time;
+        document.getElementById("successQuantity").textContent = bookingDetails.seatsBooked;
+        document.getElementById("successAmount").textContent = bookingDetails.seatsBooked * bookingDetails.ratePerHour;
+
+        // Generate QR Code
+        const qrCode = new QRCode(document.getElementById("qrCode"), {
+          text: JSON.stringify(bookingDetails),
+          width: 80,
+          height: 80,
+        });
+      } else {
+        alert("No booking details found. Please go back and book a venue.");
+        window.location.href = "booking.html";
+      }
+    });
+
+    // Print Booking
+    function printBooking() {
+      window.print();
+    }
+
+    // Go to Home Page
+    function goToHome() {
+      window.location.href = "index.html";
+    }
+
+    // Dark Mode Toggle
+    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
+    toggleDarkModeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      updateDarkModeButton();
+    });
+
+    function updateDarkModeButton() {
+      if (document.body.classList.contains('dark-mode')) {
+        toggleDarkModeBtn.textContent = '☀️';
+      } else {
+        toggleDarkModeBtn.textContent = '🌙';
+      }
+    }
+
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+      updateDarkModeButton();
+    }
+  </script>
+</body>
+</html>

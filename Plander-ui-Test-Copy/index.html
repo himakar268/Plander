@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plander - Sports Facility Booking</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Plander</div>
+    <div class="nav-links">
+      <span id="greeting"></span>
+      <button id="myBookingsBtn" class="btn">My Bookings</button>
+      <button id="logoutBtn" class="btn btn-danger" style="display: none;">Logout</button>
+      <button id="toggleDarkMode" class="btn">🌙</button>
+    </div>
+  </nav>
+
+  <main id="mainContent">
+    <!-- Home Page -->
+    <div id="homePage" class="page active">
+      <section id="hero" class="hero-section">
+        <h1 class="animate__animated animate__fadeIn">Find and Book Sports Facilities</h1>
+        <p class="animate__animated animate__fadeIn animate__delay-1s">
+          Join players in your area and book sports facilities with ease
+        </p>
+        <div class="location-finder animate__animated animate__fadeIn animate__delay-2s">
+          <i class="fas fa-location-dot"></i>
+          <span id="userLocation">Hyderabad</span>
+        </div>
+      </section>
+
+      <section id="topGames" class="games-section">
+        <h2>Games</h2>
+        <div class="games-grid" id="gamesContainer">
+          <!-- Games will be loaded dynamically here -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+
+  <!-- Footer -->
+  <footer style="
+    background-color: var(--card-background);
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+    box-shadow: var(--shadow);
+  ">
+    <div style="
+      display: flex;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 2rem;
+    ">
+      <div style="flex: 1;">
+        <h3 style="
+          font-size: 1.5rem;
+          color: var(--primary-color);
+          margin-bottom: 1rem;
+        ">Plander</h3>
+        <p style="
+          font-size: 1rem;
+          color: var(--text-color);
+        ">Your go-to platform for booking sports facilities.</p>
+      </div>
+      <div style="flex: 1;">
+        <h4 style="
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-bottom: 1rem;
+        ">Quick Links</h4>
+        <ul style="list-style: none;">
+          <li style="margin-bottom: 0.5rem;">
+            <a href="#" style="
+              text-decoration: none;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+            ">About Us</a>
+          </li>
+          <li style="margin-bottom: 0.5rem;">
+            <a href="#" style="
+              text-decoration: none;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+            ">Contact Us</a>
+          </li>
+          <li style="margin-bottom: 0.5rem;">
+            <a href="#" style="
+              text-decoration: none;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+            ">Privacy Policy</a>
+          </li>
+        </ul>
+      </div>
+      <div style="flex: 1;">
+        <h4 style="
+          font-size: 1.2rem;
+          color: var(--primary-color);
+          margin-bottom: 1rem;
+        ">Follow Us</h4>
+        <div style="display: flex; gap: 1rem;">
+          <a href="#" style="
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+          "><i class="fab fa-facebook"></i></a>
+          <a href="#" style="
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+          "><i class="fab fa-twitter"></i></a>
+          <a href="#" style="
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+          "><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div style="
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    ">
+      <p style="
+        font-size: 0.9rem;
+        color: var(--text-color);
+      ">&copy; 2025 Plander. All rights reserved.</p>
+    </div>
+  </footer>
+
+
+  <script src="main.js"></script>
+</body>
+</html>
